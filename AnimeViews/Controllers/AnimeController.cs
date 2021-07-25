@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnimeViews.Controllers
@@ -15,31 +16,51 @@ namespace AnimeViews.Controllers
         [HttpGet]
         public IActionResult get()
         {
-            return Ok();
+            try {
+                return Ok();
+            } catch {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
+            }
         }
 
         [HttpPost]
         public IActionResult post()
         {
-            return Ok();
+            try {
+                return Ok();
+            } catch {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
+            }
         }
 
         [HttpGet("{AnimeId}")]  
         public IActionResult getById(int AnimeId)
         {
-            return Ok();
+            try {
+                return Ok();
+            } catch {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
+            }
         }
 
         [HttpPut("{AnimeId}")]
         public IActionResult put(int AnimeId)
         {
-            return Ok();
+            try {
+                return Ok();
+            } catch {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
+            }
         }
 
         [HttpDelete("{AnimeId}")]
         public IActionResult delete(int AnimeId)
         {
-            return Ok();
+            try {
+                return Ok();
+            } catch {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
+            }
         }
     }
 }
