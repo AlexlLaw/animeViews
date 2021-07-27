@@ -1,4 +1,7 @@
 
+using System.Threading.Tasks;
+using AnimeViews.Data;
+using AnimeViews.models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,59 +11,98 @@ namespace AnimeViews.Controllers
     [ApiController]
     public class AnimeController : Controller
     {
-        public AnimeController()
+        public IRepository _repo { get; }
+
+        public AnimeController(IRepository repo)
         {
-            
+            _repo = repo;
         }
 
         [HttpGet]
-        public IActionResult get()
+        public async Task<IActionResult> get()
         {
             try {
-                return Ok();
-            } catch {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
-            }
-        }
+                var result = await _repo.GetAllAnimesAsync(true);
 
-        [HttpPost]
-        public IActionResult post()
-        {
-            try {
-                return Ok();
+                return Ok(result);
             } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
             }
         }
 
         [HttpGet("{AnimeId}")]  
-        public IActionResult getById(int AnimeId)
+        public async Task<IActionResult> getById(int AnimeId)
         {
             try {
-                return Ok();
+                var result = await _repo.GetAnimeAsyncById(AnimeId, true);
+
+                return Ok(result);
             } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> post(Anime model)
+        {
+            try {
+                _repo.Add(model);
+
+                if (await _repo.SaveChangesAsync()) {
+                    return Created($"/api/anime/{model.AnimeId}", model);
+                }
+                
+            } catch {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
+            }
+            
+            return BadRequest();
         }
 
         [HttpPut("{AnimeId}")]
-        public IActionResult put(int AnimeId)
+        public async Task<IActionResult> put(int AnimeId, Anime model)
         {
             try {
-                return Ok();
+                var anime = await _repo.GetAnimeAsyncById(AnimeId, true);
+
+                if (anime == null) {
+                    return NotFound();
+                }
+
+                _repo.Update(model);
+
+                if (await _repo.SaveChangesAsync()) {
+
+                    return Ok();
+                }
+
             } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
             }
+
+             return BadRequest();
         }
 
         [HttpDelete("{AnimeId}")]
-        public IActionResult delete(int AnimeId)
+        public async Task<IActionResult> delete(int AnimeId)
         {
             try {
-                return Ok();
+                var anime = await _repo.GetAnimeAsyncById(AnimeId, true);
+
+                if (anime == null) {
+                return NotFound();
+                }
+
+                _repo.Delete(anime);
+
+                if (await _repo.SaveChangesAsync()) {
+                    return Ok();
+                }
             } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de conexão com banco de dados");
             }
+
+             return BadRequest();
         }
     }
 }
