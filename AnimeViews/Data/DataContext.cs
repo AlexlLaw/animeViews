@@ -7,8 +7,9 @@ namespace AnimeViews.Data
     public class DataContext : DbContext 
     {
         public DataContext(DbContextOptions<DataContext> options) : base (options) {}
-        public DbSet<Anime> Animes { get; set;}
-        public DbSet<Pessoa> Pessoas { get; set;}
+        public DbSet<Anime> Animes { get; set; }
+        public DbSet<Pessoa> Pessoas { get; set; }
+        public DbSet<AnimePessoa> AnimesPessoas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -18,8 +19,7 @@ namespace AnimeViews.Data
                         new Pessoa() {
                             PessoaId = 1,
                             Nome = "Álex Junior Saturnino Sobrinho",
-                            Idade = 25,
-                            AnimeId = 1
+                            Idade = 25
                         }
                     }
                 );
@@ -36,6 +36,19 @@ namespace AnimeViews.Data
                         }
                     }
                 );
+
+            builder.Entity<AnimePessoa>()
+                .HasKey(ap => new {ap.AnimeId, ap.PessoaId});
+
+            builder.Entity<AnimePessoa>()
+                .HasOne(ap => ap.Animes)
+                .WithMany(p => p.AnimePessoas)
+                .HasForeignKey(ap => ap.AnimeId);
+
+            builder.Entity<AnimePessoa>()
+                .HasOne(ap => ap.Pessoas)
+                .WithMany(p => p.AnimePessoas)
+                .HasForeignKey(ap => ap.PessoaId);
         }
     }
 }

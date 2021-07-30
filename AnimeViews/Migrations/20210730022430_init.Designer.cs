@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnimeViews.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210725195723_init")]
+    [Migration("20210730022430_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -16,21 +16,6 @@ namespace AnimeViews.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.0");
-
-            modelBuilder.Entity("AnimePessoa", b =>
-                {
-                    b.Property<int>("AnimesViewsAnimeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PessoasViewsPessoaId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("AnimesViewsAnimeId", "PessoasViewsPessoaId");
-
-                    b.HasIndex("PessoasViewsPessoaId");
-
-                    b.ToTable("AnimePessoa");
-                });
 
             modelBuilder.Entity("AnimeViews.models.Anime", b =>
                 {
@@ -65,13 +50,25 @@ namespace AnimeViews.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AnimeViews.models.AnimePessoa", b =>
+                {
+                    b.Property<int>("AnimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PessoaId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("AnimeId", "PessoaId");
+
+                    b.HasIndex("PessoaId");
+
+                    b.ToTable("AnimesPessoas");
+                });
+
             modelBuilder.Entity("AnimeViews.models.Pessoa", b =>
                 {
                     b.Property<int>("PessoaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AnimeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Idade")
@@ -88,25 +85,38 @@ namespace AnimeViews.Migrations
                         new
                         {
                             PessoaId = 1,
-                            AnimeId = 1,
                             Idade = 25,
                             Nome = "Álex Junior Saturnino Sobrinho"
                         });
                 });
 
-            modelBuilder.Entity("AnimePessoa", b =>
+            modelBuilder.Entity("AnimeViews.models.AnimePessoa", b =>
                 {
-                    b.HasOne("AnimeViews.models.Anime", null)
-                        .WithMany()
-                        .HasForeignKey("AnimesViewsAnimeId")
+                    b.HasOne("AnimeViews.models.Anime", "Animes")
+                        .WithMany("AnimePessoas")
+                        .HasForeignKey("AnimeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AnimeViews.models.Pessoa", null)
-                        .WithMany()
-                        .HasForeignKey("PessoasViewsPessoaId")
+                    b.HasOne("AnimeViews.models.Pessoa", "Pessoas")
+                        .WithMany("AnimePessoas")
+                        .HasForeignKey("PessoaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Animes");
+
+                    b.Navigation("Pessoas");
+                });
+
+            modelBuilder.Entity("AnimeViews.models.Anime", b =>
+                {
+                    b.Navigation("AnimePessoas");
+                });
+
+            modelBuilder.Entity("AnimeViews.models.Pessoa", b =>
+                {
+                    b.Navigation("AnimePessoas");
                 });
 #pragma warning restore 612, 618
         }

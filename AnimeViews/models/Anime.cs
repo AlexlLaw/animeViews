@@ -9,6 +9,6 @@ namespace AnimeViews.models
         public string DataDeLançamento { get; set; }
         public int Temporadas { get; set; }
         public int QtdDeEpisodios { get; set; }
-        public List<Pessoa> PessoasViews { get; set; }
+        public List<AnimePessoa> AnimePessoas { get; set; }
     }
 }

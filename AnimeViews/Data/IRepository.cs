@@ -15,5 +15,7 @@ namespace AnimeViews.Data
 
         Task<Pessoa[]> GetAllPessoasAsync(bool includeAnime);
         Task<Pessoa> GetPessoaAsyncById(int PessoaId, bool includeAnime);
+
+        Task<AnimePessoa> GetAnimePessoaAsyncById(AnimePessoa AnimePessoa);
     }
 }

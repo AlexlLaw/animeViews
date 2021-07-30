@@ -59,11 +59,11 @@ namespace AnimeViews.Controllers
             return BadRequest();
        }
 
-        [HttpPut("{PessoaId}")]
-        public async Task<IActionResult> put(int PessoaId, Pessoa model)
+        [HttpPut]
+        public async Task<IActionResult> put(Pessoa model)
         {
             try {
-                var pessoa = await _repo.GetPessoaAsyncById(PessoaId, true);
+                var pessoa = await _repo.GetPessoaAsyncById(model.PessoaId, true);
 
                 if (pessoa == null) {
                     return NotFound();

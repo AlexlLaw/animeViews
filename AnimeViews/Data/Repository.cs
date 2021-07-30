@@ -38,9 +38,6 @@ namespace AnimeViews.Data
         {
             IQueryable<Anime> query = _context.Animes;
 
-            if (includePessoa) {
-                query = query.Include(anime => anime.PessoasViews);
-            }
             query = query   
                     .AsNoTracking()
                     .OrderBy(anime => anime.AnimeId);
@@ -51,10 +48,7 @@ namespace AnimeViews.Data
         public async Task<Anime> GetAnimeAsyncById(int AnimeId, bool includePessoa)
         {
            IQueryable<Anime> query = _context.Animes;
-
-            if (includePessoa) {
-                query = query.Include(anime => anime.PessoasViews);
-            }
+    
             query = query   
                     .AsNoTracking()
                     .OrderBy(anime => anime.AnimeId)
@@ -67,9 +61,6 @@ namespace AnimeViews.Data
         {
              IQueryable<Pessoa> query = _context.Pessoas;
 
-            if (includeAnime) {
-                query = query.Include(anime => anime.AnimesViews);
-            }
             query = query   
                     .AsNoTracking()
                     .OrderBy(pessoa => pessoa.PessoaId);
@@ -79,16 +70,24 @@ namespace AnimeViews.Data
 
         public async Task<Pessoa> GetPessoaAsyncById(int PessoaId, bool includeAnime)
         {
-             IQueryable<Pessoa> query = _context.Pessoas;
+            IQueryable<Pessoa> query = _context.Pessoas;
 
-            if (includeAnime) {
-                query = query.Include(pessoa => pessoa.AnimesViews);
-            }
             query = query   
                     .AsNoTracking()
                     .OrderBy(pessoa => pessoa.PessoaId)
                     .Where(pessoa => pessoa.PessoaId == PessoaId);
 
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<AnimePessoa> GetAnimePessoaAsyncById(AnimePessoa AnimePessoa)
+        {
+         IQueryable<AnimePessoa> query = _context.AnimesPessoas;
+    
+                query = query   
+                        .AsNoTracking()
+                        .Where(ap => ap.AnimeId == AnimePessoa.AnimeId && ap.PessoaId ==  AnimePessoa.PessoaId);
+                
             return await query.FirstOrDefaultAsync();
         }
     }

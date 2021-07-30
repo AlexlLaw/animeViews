@@ -29,8 +29,7 @@ namespace AnimeViews.Migrations
                     PessoaId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Nome = table.Column<string>(type: "TEXT", nullable: true),
-                    Idade = table.Column<int>(type: "INTEGER", nullable: false),
-                    AnimeId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Idade = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,24 +37,24 @@ namespace AnimeViews.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnimePessoa",
+                name: "AnimesPessoas",
                 columns: table => new
                 {
-                    AnimesViewsAnimeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PessoasViewsPessoaId = table.Column<int>(type: "INTEGER", nullable: false)
+                    AnimeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PessoaId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnimePessoa", x => new { x.AnimesViewsAnimeId, x.PessoasViewsPessoaId });
+                    table.PrimaryKey("PK_AnimesPessoas", x => new { x.AnimeId, x.PessoaId });
                     table.ForeignKey(
-                        name: "FK_AnimePessoa_Animes_AnimesViewsAnimeId",
-                        column: x => x.AnimesViewsAnimeId,
+                        name: "FK_AnimesPessoas_Animes_AnimeId",
+                        column: x => x.AnimeId,
                         principalTable: "Animes",
                         principalColumn: "AnimeId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AnimePessoa_Pessoas_PessoasViewsPessoaId",
-                        column: x => x.PessoasViewsPessoaId,
+                        name: "FK_AnimesPessoas_Pessoas_PessoaId",
+                        column: x => x.PessoaId,
                         principalTable: "Pessoas",
                         principalColumn: "PessoaId",
                         onDelete: ReferentialAction.Cascade);
@@ -68,19 +67,19 @@ namespace AnimeViews.Migrations
 
             migrationBuilder.InsertData(
                 table: "Pessoas",
-                columns: new[] { "PessoaId", "AnimeId", "Idade", "Nome" },
-                values: new object[] { 1, 1, 25, "Álex Junior Saturnino Sobrinho" });
+                columns: new[] { "PessoaId", "Idade", "Nome" },
+                values: new object[] { 1, 25, "Álex Junior Saturnino Sobrinho" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnimePessoa_PessoasViewsPessoaId",
-                table: "AnimePessoa",
-                column: "PessoasViewsPessoaId");
+                name: "IX_AnimesPessoas_PessoaId",
+                table: "AnimesPessoas",
+                column: "PessoaId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AnimePessoa");
+                name: "AnimesPessoas");
 
             migrationBuilder.DropTable(
                 name: "Animes");
